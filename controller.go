@@ -94,7 +94,7 @@ func (c *Controller) WriteJson(ret interface{}) {
 
 //渲染模板
 func (c *Controller) render() {
-	ret := []string{}
+	var ret []string = make([]string, 0, 10)
 	findTplsPaths(c.tpl[0], &ret)
 	t, err := template.New(filepath.Base(c.tpl[0])).Funcs(pandaTplFuncMap).ParseFiles(ret...)
 	if err != nil {
@@ -118,7 +118,7 @@ func findTplsPaths(tplPath string, paths *[]string) {
 		tmp := templates[tpls[i]]
 		if len(tmp) > 0 {
 			for j := 0; j < len(tmp); j++ {
-				findTplsPaths(tmp[i], paths)
+				findTplsPaths(tmp[j], paths)
 			}
 
 		}
