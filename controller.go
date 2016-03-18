@@ -94,10 +94,8 @@ func (c *Controller) WriteJson(ret interface{}) {
 
 //渲染模板
 func (c *Controller) render() {
-	var ret []string = make([]string, 0, len(templates[c.tpl[0]])+1)
-	ret = append(ret, c.tpl[0])
-	ret = append(ret, templates[c.tpl[0]]...)
-	fmt.Println(ret)
+	ret := []string{}
+	findTplsPaths(c.tpl[0], &ret)
 	t, err := template.New(filepath.Base(c.tpl[0])).Funcs(pandaTplFuncMap).ParseFiles(ret...)
 	if err != nil {
 		c.Write([]byte(err.Error()))
@@ -108,6 +106,24 @@ func (c *Controller) render() {
 	if err != nil {
 		ERROR.Println(err)
 	}
+}
+
+//递归查找模板
+func findTplsPaths(tplPath string, paths *[]string) {
+	tpls := templates[tplPath]
+	*paths = append(*paths, tplPath)
+	*paths = append(*paths, tpls...)
+	for i := 0; i < len(tpls); i++ {
+		//递归判断里面的模板是否有加载路径
+		tmp := templates[tpls[i]]
+		if len(tmp) > 0 {
+			for j := 0; j < len(tmp); j++ {
+				findTplsPaths(tmp[i], paths)
+			}
+
+		}
+	}
+
 }
 
 //将参数转化为一个结构

@@ -1,19 +1,5 @@
-﻿<!DOCTYPE html>
-<html>
- {{template "head_tag" .}}
-<body class="easyui-layout">
-	<div data-options="region:'north',border:false" style="height:70px;background:#B3DFDA;padding:2px">
-		 {{template "header" .}}
-	</div>
-	<div data-options="region:'west',split:true,title:'菜单'" style="width:220px;padding:5px;">
-     <!--left nav-->
-     {{template "left_nav" .}}
-     <!--left nav end-->
-	</div>
-	<div data-options="region:'south',border:false" style="height:30px;background:#A9FACD;text-align: center;line-height: 30px;">
-	 	©2004 Panda Corporation. All rights reserved.
-	</div>
-	<div data-options="region:'center',title:'数据表信息'">
-    </div>
-</body>
-</html>
+﻿{{template "header" .}}
+<div data-options="region:'center',title:'数据表信息'">
+ 
+</div>
+{{template "left_nav" .}}
