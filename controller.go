@@ -99,7 +99,7 @@ func (c *Controller) Render() {
 		c.Write([]byte(err.Error()))
 		return
 	}
-
+	c.ResponseWriter.Header().Add("content-type", "text/html;charset=utf-8")
 	err = t.Execute(c.ResponseWriter, c.Data)
 	if err != nil {
 		ERROR.Println(err)

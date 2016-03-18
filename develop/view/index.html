@@ -1,41 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>{{.index}}</title>
+	<link rel="stylesheet" type="text/css" href="public/eui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="public/eui/themes/icon.css">
+	<script type="text/javascript" src="public/eui/jquery.min.js"></script>
+	<script type="text/javascript" src="public/eui/jquery.easyui.min.js"></script>
+</head>
+<body class="easyui-layout">
+	<div data-options="region:'north',border:false" style="height:70px;background:#B3DFDA;padding:2px">
 
-<!DOCTYPE html>
-	<html>
-	<head>
-	    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	    <title>{{.index}}|{{dateformat .now "2006-01-02 15:04:05"}}</title>
-	    <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
-	    <meta name="apple-mobile-web-app-capable" content="yes"/>
-	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-		<link href="http://cdn.centwaytech.com/docapi/20160219111955/bundle.css" rel="stylesheet"/>
-		<script>
-		   var user=null;
-		   var pro={projectId:0,name:""};
-		   var version={versionId:0,version:""};
-		   function dialog(b){
-	 		  	layer.alert(b, {
-	 		  		title:"提示",
-				    skin: 'layui-layer-molv',
-				    closeBtn: 0
-				});
-		   }
-		   function loading(t) {
-		   	 layer.msg(t,{
-				time:0,
-				shade: [0.4, '#000'],
-				icon: 16 
-			 });
-		   } 
-		   function loadingClose() {
-		   	  layer.closeAll('loading');
-		   }
-		</script>
-	</head>
-	<body>
-	<div id="main"></div>
-	<script src="http://cdn.centwaytech.com/jq.js"></script>
-	<script src="http://cdn.centwaytech.com/layer/layer.js"></script>
-	<script src="http://cdn.centwaytech.com/docapi/20160219111955/bundle.js"></script>
-	</body>
-	</html>
-	
+		<div class="easyui-tabs" data-options="tabWidth:100,tabHeight:60" style="width:420px;height:65px;float: right;">
+			<div title="<span class='tt-inner'><img src='public/eui/themes/icons/large_shapes.png'/><br>DB管理</span>"></div>
+			<div title="<span class='tt-inner'><img src='public/eui/themes/icons/large_picture.png'/><br>文件管理</span>"></div>
+			<div title="<span class='tt-inner'><img src='public/eui/themes/icons/large_smartart.png'/><br>日志信息</span>"> </div>
+			<div title="<span class='tt-inner'><img src='public/eui/themes/icons/large_chart.png'/><br>统计报表</span>"> </div>
+		</div>
+		<style scoped="scoped">
+			.tt-inner{
+				display:inline-block;
+				line-height:12px;
+				padding-top:5px;
+			}
+			.tt-inner img{
+				border:0;
+			}
+		</style>
+
+	</div>
+	<div data-options="region:'west',split:true,title:'菜单'" style="width:220px;padding:5px;">
+     <!--left nav-->
+     	<div class="easyui-accordion" style="width:202px;margin: 0px;border-bottom: none;">
+		<div title="开发工具" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;margin: 0px;">
+			 <ul style="width: 100%;padding: 0px;margin: 0px;">
+			 	<li style="margin-bottom: 10px;">
+			 	  <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-shading'" style="width:100%">
+			 	  		界面开发
+			 	  </a>
+			 	</li>
+			 	<li style="margin-bottom: 10px;">
+			 	  <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-briefcase'" style="width:100%">
+			 	  		ORM开发
+			 	  </a>
+			 	</li>
+			 	<li style="margin-bottom: 10px;">
+			 	  <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-database_link'" style="width:100%">
+			 	  		数据库配置
+			 	  </a>
+			 	</li>
+			 </ul>
+		</div>
+	</div>
+     <!--left nav end-->
+	</div>
+	<div data-options="region:'south',border:false" style="height:30px;background:#A9FACD;text-align: center;line-height: 30px;">
+	 	©2004 Panda Corporation. All rights reserved.
+	</div>
+	<div data-options="region:'center',title:'数据表信息'">
+    </div>
+</body>
+</html>

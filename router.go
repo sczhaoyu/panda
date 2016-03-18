@@ -58,8 +58,8 @@ func checkStaticFolder(w http.ResponseWriter, r *http.Request, url string) bool 
 }
 
 //设置静态目录
-func SetStaticFolder(folderName string) {
-	staticFolder = append(staticFolder, folderName)
+func SetStaticFolder(folderName ...string) {
+	staticFolder = append(staticFolder, folderName...)
 }
 func handle(w http.ResponseWriter, r *http.Request) {
 	//匹配URL
