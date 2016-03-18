@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>{{.index}}</title>
+	<title>{{.index}}{{dateformat .now "2006-10-15"}}</title>
 	<link rel="stylesheet" type="text/css" href="public/eui/themes/default/easyui.css">
 	<link rel="stylesheet" type="text/css" href="public/eui/themes/icon.css">
 	<script type="text/javascript" src="public/eui/jquery.min.js"></script>
@@ -10,7 +10,6 @@
 </head>
 <body class="easyui-layout">
 	<div data-options="region:'north',border:false" style="height:70px;background:#B3DFDA;padding:2px">
-
 		<div class="easyui-tabs" data-options="tabWidth:100,tabHeight:60" style="width:420px;height:65px;float: right;">
 			<div title="<span class='tt-inner'><img src='public/eui/themes/icons/large_shapes.png'/><br>DB管理</span>"></div>
 			<div title="<span class='tt-inner'><img src='public/eui/themes/icons/large_picture.png'/><br>文件管理</span>"></div>
@@ -31,27 +30,7 @@
 	</div>
 	<div data-options="region:'west',split:true,title:'菜单'" style="width:220px;padding:5px;">
      <!--left nav-->
-     	<div class="easyui-accordion" style="width:202px;margin: 0px;border-bottom: none;">
-		<div title="开发工具" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;margin: 0px;">
-			 <ul style="width: 100%;padding: 0px;margin: 0px;">
-			 	<li style="margin-bottom: 10px;">
-			 	  <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-shading'" style="width:100%">
-			 	  		界面开发
-			 	  </a>
-			 	</li>
-			 	<li style="margin-bottom: 10px;">
-			 	  <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-briefcase'" style="width:100%">
-			 	  		ORM开发
-			 	  </a>
-			 	</li>
-			 	<li style="margin-bottom: 10px;">
-			 	  <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-database_link'" style="width:100%">
-			 	  		数据库配置
-			 	  </a>
-			 	</li>
-			 </ul>
-		</div>
-	</div>
+     {{template "left_nav" .}}
      <!--left nav end-->
 	</div>
 	<div data-options="region:'south',border:false" style="height:30px;background:#A9FACD;text-align: center;line-height: 30px;">

@@ -6,7 +6,7 @@ import (
 )
 
 func index(c *Controller) {
-	c.Tpl = "view/index.html"
+	c.ParseFiles("view/index.html", "view/left_nav.html")
 	c.Data["index"] = "开发工具"
 	c.Data["now"] = time.Now().Local()
 }
