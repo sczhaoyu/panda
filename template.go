@@ -73,4 +73,31 @@ func readTemplates() {
 		}
 
 	}
+	for k, _ := range templates {
+		tpls := templates[k]
+		var ret []string = make([]string, 0, 0)
+		for i := 0; i < len(tpls); i++ {
+			findTplsPaths(tpls[i], &ret)
+
+		}
+		templates[k] = append(templates[k], ret...)
+	}
+
+}
+
+//递归查找模板
+func findTplsPaths(tplPath string, paths *[]string) {
+	tpls := templates[tplPath]
+	if len(tpls) == 0 {
+		return
+	}
+	*paths = append(*paths, tpls...)
+	for i := 0; i < len(tpls); i++ {
+		//递归判断里面的模板是否有加载路径
+		tmp := templates[tpls[i]]
+		for j := 0; j < len(tmp); j++ {
+			findTplsPaths(tmp[j], paths)
+		}
+	}
+
 }
