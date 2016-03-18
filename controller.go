@@ -1,9 +1,11 @@
 package panda
 
 import (
+	"encoding/json"
 	"fmt"
 	. "github.com/sczhaoyu/panda/session"
 	"html/template"
+	"io/ioutil"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -13,11 +15,11 @@ import (
 
 //控制器
 type Controller struct {
-	*http.Request                         //请求信息
-	http.ResponseWriter                   //输出信息
-	Data                map[string]string //渲染时候的参数
-	Tpl                 string            //渲染使用的模板
-	SessionManager      *Manager          //sesion管理器
+	*http.Request                              //请求信息
+	http.ResponseWriter                        //输出信息
+	Data                map[string]interface{} //渲染时候的参数
+	Tpl                 string                 //渲染使用的模板
+	SessionManager      *Manager               //sesion管理器
 }
 
 //创建控制器
@@ -25,7 +27,7 @@ func newController(r *http.Request, w http.ResponseWriter) *Controller {
 	var c Controller
 	c.Request = r
 	c.ResponseWriter = w
-	c.Data = make(map[string]string, 0)
+	c.Data = make(map[string]interface{}, 0)
 	c.Request.ParseForm()
 	//加入session管理器
 	if SessionSwitch && panda.SessionManager != nil {
@@ -77,10 +79,31 @@ func (c *Controller) Write(b []byte) {
 	c.ResponseWriter.Header().Add("content-type", "text/html;charset=utf-8")
 	c.ResponseWriter.Write(b)
 }
-func (c *Controller) Render() {
-	t, _ := template.New("pandas").Parse(c.Tpl)
-	t.Execute(c.ResponseWriter, c.Data)
+func (c *Controller) WriteJson(ret interface{}) {
+	c.ResponseWriter.Header().Add("access-control-allow-origin", "*")
+	c.ResponseWriter.Header().Add("content-type", "application/json;charset=utf-8")
+	c.ResponseWriter.Header().Add("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With")
+	data, _ := json.Marshal(ret)
+	c.ResponseWriter.Write(data)
+}
 
+//渲染模板
+func (c *Controller) Render() {
+	bytes, err := ioutil.ReadFile(c.Tpl) //读文件
+	if err != nil {
+		c.Write([]byte(err.Error()))
+		return
+	}
+	t, err := template.New("text").Funcs(pandaTplFuncMap).Parse(string(bytes))
+	if err != nil {
+		c.Write([]byte(err.Error()))
+		return
+	}
+
+	err = t.Execute(c.ResponseWriter, c.Data)
+	if err != nil {
+		ERROR.Println(err)
+	}
 }
 
 //将参数转化为一个结构

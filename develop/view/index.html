@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+	<html>
+	<head>
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	    <title>{{.index}}|{{dateformat .now "2006-01-02 15:04:05"}}</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+	    <meta name="apple-mobile-web-app-capable" content="yes"/>
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<link href="http://cdn.centwaytech.com/docapi/20160219111955/bundle.css" rel="stylesheet"/>
+		<script>
+		   var user=null;
+		   var pro={projectId:0,name:""};
+		   var version={versionId:0,version:""};
+		   function dialog(b){
+	 		  	layer.alert(b, {
+	 		  		title:"提示",
+				    skin: 'layui-layer-molv',
+				    closeBtn: 0
+				});
+		   }
+		   function loading(t) {
+		   	 layer.msg(t,{
+				time:0,
+				shade: [0.4, '#000'],
+				icon: 16 
+			 });
+		   } 
+		   function loadingClose() {
+		   	  layer.closeAll('loading');
+		   }
+		</script>
+	</head>
+	<body>
+	<div id="main"></div>
+	<script src="http://cdn.centwaytech.com/jq.js"></script>
+	<script src="http://cdn.centwaytech.com/layer/layer.js"></script>
+	<script src="http://cdn.centwaytech.com/docapi/20160219111955/bundle.js"></script>
+	</body>
+	</html>
+	

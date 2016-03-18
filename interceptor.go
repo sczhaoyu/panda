@@ -18,6 +18,10 @@ func interceptorRun(c *Controller, f func(*Controller)) {
 	b := interceptorFilert(c, BEFORE)
 	if b {
 		f(c)
+		//判断是否运行渲染
+		if c.Tpl != "" {
+			c.Render()
+		}
 	}
 	//函数运行后
 	defer interceptorFilert(c, AFTER)

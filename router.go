@@ -21,8 +21,12 @@ type Router struct {
 	Action func(*Controller) //控制器
 }
 
-//路由器列表
-var routers map[string]*Router = make(map[string]*Router, 0)
+var (
+	//路由器列表
+	routers map[string]*Router = make(map[string]*Router, 0)
+	//静态资源目录列表,表达式
+	staticFolder []string = make([]string, 0, 0)
+)
 
 //添加路由器
 func HandlerRouter(method, url string, f func(*Controller)) {
@@ -41,11 +45,30 @@ func HandlerRouter(method, url string, f func(*Controller)) {
 	r.Method = strings.ToUpper(method)
 	routers[url] = &r
 }
+
+//静态资源目录检查
+func checkStaticFolder(w http.ResponseWriter, r *http.Request, url string) bool {
+	for i := 0; i < len(staticFolder); i++ {
+		if isOk, _ := regexp.MatchString(staticFolder[i], url); isOk {
+			http.ServeFile(w, r, strings.TrimLeft(url, "/"))
+			return isOk
+		}
+	}
+	return false
+}
+
+//设置静态目录
+func SetStaticFolder(folderName string) {
+	staticFolder = append(staticFolder, folderName)
+}
 func handle(w http.ResponseWriter, r *http.Request) {
 	//匹配URL
 	reg := regexp.MustCompile(`\?.*`)
 	url := reg.ReplaceAllString(r.RequestURI, "")
-
+	//检查是否为静态资源目录
+	if checkStaticFolder(w, r, url) {
+		return
+	}
 	val, ok := routers[url]
 
 	if !ok {
