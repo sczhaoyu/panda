@@ -26,10 +26,11 @@ var (
 	SessionConfig string  //Session配置
 )
 var (
-	HttpSSL      bool   //是否启动SSL
-	LocalAddress string //监听地址和端口
-	HttpSslCert  string //SSL信息
-	HttpSslKey   string //SSL信息
+	HttpSSL      bool      //是否启动SSL
+	LocalAddress string    //监听地址和端口
+	HttpSslCert  string    //SSL信息
+	HttpSslKey   string    //SSL信息
+	ViewPath     = "view/" //模板的路径
 )
 
 const (

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"reflect"
 	"regexp"
 	"strings"
@@ -29,6 +30,7 @@ func init() {
 	pandaTplFuncMap["renderform"] = RenderForm
 	pandaTplFuncMap["assets_js"] = AssetsJs
 	pandaTplFuncMap["assets_css"] = AssetsCss
+	pandaTplFuncMap["include"] = Include
 	pandaTplFuncMap["eq"] = eq // ==
 	pandaTplFuncMap["ge"] = ge // >=
 	pandaTplFuncMap["gt"] = gt // >
@@ -36,7 +38,13 @@ func init() {
 	pandaTplFuncMap["lt"] = lt // <
 	pandaTplFuncMap["ne"] = ne // !=
 }
-
+func Include(fileName string) string {
+	bytes, err := ioutil.ReadFile(fileName) //读文件
+	if err != nil {
+		return err.Error()
+	}
+	return string(bytes)
+}
 func Substr(s string, start, length int) string {
 	bt := []rune(s)
 	if start < 0 {

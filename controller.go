@@ -5,8 +5,8 @@ import (
 	"fmt"
 	. "github.com/sczhaoyu/panda/session"
 	"html/template"
-	"io/ioutil"
 	"net/http"
+	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
@@ -18,7 +18,7 @@ type Controller struct {
 	*http.Request                              //请求信息
 	http.ResponseWriter                        //输出信息
 	Data                map[string]interface{} //渲染时候的参数
-	Tpl                 string                 //渲染使用的模板
+	tpl                 []string               //渲染使用的模板
 	SessionManager      *Manager               //sesion管理器
 }
 
@@ -34,6 +34,11 @@ func newController(r *http.Request, w http.ResponseWriter) *Controller {
 		c.SessionManager = panda.SessionManager
 	}
 	return &c
+}
+func (c *Controller) ParseFiles(args ...string) {
+	for i := 0; i < len(args); i++ {
+		c.tpl = append(c.tpl, ViewPath+args[i])
+	}
 }
 
 //获取Session
@@ -88,13 +93,12 @@ func (c *Controller) WriteJson(ret interface{}) {
 }
 
 //渲染模板
-func (c *Controller) Render() {
-	bytes, err := ioutil.ReadFile(c.Tpl) //读文件
-	if err != nil {
-		c.Write([]byte(err.Error()))
-		return
-	}
-	t, err := template.New("text").Funcs(pandaTplFuncMap).Parse(string(bytes))
+func (c *Controller) render() {
+	var ret []string = make([]string, 0, len(templates[c.tpl[0]])+1)
+	ret = append(ret, c.tpl[0])
+	ret = append(ret, templates[c.tpl[0]]...)
+	fmt.Println(ret)
+	t, err := template.New(filepath.Base(c.tpl[0])).Funcs(pandaTplFuncMap).ParseFiles(ret...)
 	if err != nil {
 		c.Write([]byte(err.Error()))
 		return

@@ -19,8 +19,8 @@ func interceptorRun(c *Controller, f func(*Controller)) {
 	if b {
 		f(c)
 		//判断是否运行渲染
-		if c.Tpl != "" {
-			c.Render()
+		if len(c.tpl) > 0 {
+			c.render()
 		}
 	}
 	//函数运行后
