@@ -1,4 +1,46 @@
 ﻿{{template "header" .}}
-   <div data-options="region:'center',title:'数据表信息'">
-    </div>
+<div id="rx" data-options="region:'center',title:'数据表信息'">
+<table id="dg" style="width:auto;height:auto;"></table>
+<div id="tb" style="padding:5px;height:auto">
+		<div style="margin-bottom:5px">
+			表名: 
+			<input id="tabName"  type="text" style="width:160px">
+			<a  class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search">搜索</a>
+		</div>
+		 
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#dg').datagrid({
+			border:false,
+			fitColumns:true,
+			url:"/table/find",
+			rownumbers:true,
+			singleSelect:true,
+			pagination:true,
+			pageSize:15,
+			pageList: [15,30,50,100],
+			toolbar: "#tb",
+			columns:[[
+				{field:'name',title:'表名',width:80},
+				{field:'comment',title:'注释',width:25},
+				{field:'opt',title:'操作',width:50,
+					formatter:function(value,rec){
+						var btn = '<a href="/table/crud?name='+rec.name+'" style="padding:0px;" class="editcls"></a>';
+						return btn;
+					}
+				}
+			]],
+			onLoadSuccess:function(data){
+				$('.editcls').linkbutton({text:'生成代码',plain:true,iconCls:'icon-edit'});
+			}
+		});
+	});
+function doSearch(){
+	$('#dg').datagrid('load',{
+		name: $('#tabName').val()
+	});
+}
+</script>
+</div>
 {{template "footer" .}}

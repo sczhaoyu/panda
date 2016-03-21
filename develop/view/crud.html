@@ -1,0 +1,77 @@
+{{template "header" .}}
+<div data-options="region:'center',title:'Table【{{.name}}】生成代码'">
+	<form id="crud_form"  method="post">
+		<table>
+			<tr>
+				<td>主键列名:</td>
+				<td>
+				  <select class="easyui-combobox" name="state" style="width:150px;">
+				    {{range $k, $v := .columns}} 
+ 						<option value=" {{$v}}"> {{$v.Name}}</option>
+				    {{end}}
+				</select>
+				</td>
+				<td>action目录:</td>
+				<td><input class="easyui-textbox" style="width:150px;height:22px"></input></td>
+				<td>view目录:</td>
+				<td>
+				 <input class="easyui-textbox" style="width:150px;height:22px"></input>
+				</td>
+				<td>model目录:</td>
+				<td>
+				 	<input class="easyui-textbox" style="width:150px;height:22px"></input>
+				</td>
+				<td>
+					<a class="easyui-linkbutton" onclick="submit()" style="width:100%">生成代码</a>
+			 	</td>
+			</tr>
+		</table>
+	</form>
+	<table id="dg" style="width:auto;height:auto;"></table>
+</div>
+{{template "footer" .}}
+<script type="text/javascript">
+	$(function(){
+		$('#dg').datagrid({
+			border:false,
+			fitColumns:true,
+			url:"/column/find?name={{.name}}",
+			rownumbers:true,
+			singleSelect:true,
+			pagination:true,
+			pageSize:20,
+			pageList: [20,200],
+			toolbar: "#tb",
+			columns:[[
+				{field:'name',title:'列名',width:100},
+				{field:'key',title:'主键信息',width:30},
+				{field:'dataType',title:'数据类型',width:30},
+				{field:'tableName',title:'表名',width:60},
+				{field:'comment',title:'注释',width:100}
+			]],
+			onLoadSuccess:function(data){
+				$('.editcls').linkbutton({text:'生成代码',plain:true,iconCls:'icon-edit'});
+			}
+		});
+	});
+function submit(){
+	$('#crud_form').form('submit',{
+		url: "/auto/code",
+		onSubmit: function(){
+			return $(this).form('validate');
+		},
+		success: function(result){
+			var result = eval('('+result+')');
+			if (result.errorMsg){
+				$.messager.show({
+					title: 'Error',
+					msg: result.errorMsg
+				});
+			} else {
+				$('#dlg').dialog('close');	 
+				$('#dg').datagrid('reload'); 
+			}
+		}
+	});
+}
+</script>

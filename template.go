@@ -71,6 +71,8 @@ func readTemplates() {
 				templates[k][i] = val
 			}
 		}
+	}
+	for k, _ := range templates {
 		//生成所有对应模板文件
 		tpls := templates[k]
 		var ret []string = make([]string, 0, 0)

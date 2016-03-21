@@ -19,7 +19,7 @@ func interceptorRun(c *Controller, f func(*Controller)) {
 	if b {
 		f(c)
 		//判断是否运行渲染
-		if len(c.tpl) > 0 {
+		if c.Tpl != "" {
 			c.render()
 		}
 	}
