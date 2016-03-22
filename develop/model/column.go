@@ -26,5 +26,5 @@ func FindColumns(DBName, tableName string) ([]Column, error) {
 		ret = append(ret, tmp)
 	}
 
-	return ret, noData(len(ret) > 0)
+	return ret, NoData(len(ret) > 0)
 }

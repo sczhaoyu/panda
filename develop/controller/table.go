@@ -15,7 +15,5 @@ func tableFind(c *Controller) {
 		return
 	}
 
-	p := GetPagination(count, page, rows)
-	p.Ret = ret
-	c.WriteJson(p)
+	c.WriteJson(GetPagination(count, page, rows, ret))
 }

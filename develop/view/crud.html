@@ -1,25 +1,29 @@
 {{template "header" .}}
 <div data-options="region:'center',title:'Table【{{.name}}】生成代码'">
 	<form id="crud_form"  method="post">
+	    <input type="hidden" name="table" value="{{.name}}" /> 
 		<table>
 			<tr>
-				<td>主键列名:</td>
-				<td>
-				  <select class="easyui-combobox" name="state" style="width:150px;">
-				    {{range $k, $v := .columns}} 
- 						<option value=" {{$v}}"> {{$v.Name}}</option>
-				    {{end}}
-				</select>
-				</td>
 				<td>action目录:</td>
-				<td><input class="easyui-textbox" style="width:150px;height:22px"></input></td>
+				<td>
+					<input value="controller/" 
+					class="easyui-textbox"
+					name="action"  
+					style="width:150px;height:22px"/> 
+				</td>
 				<td>view目录:</td>
 				<td>
-				 <input class="easyui-textbox" style="width:150px;height:22px"></input>
+				 <input value="view/" 
+				 class="easyui-textbox"
+				 name="view" 
+				 style="width:150px;height:22px"/>
 				</td>
 				<td>model目录:</td>
 				<td>
-				 	<input class="easyui-textbox" style="width:150px;height:22px"></input>
+				 	<input value="model/" 
+				 	class="easyui-textbox"
+				 	name="model"
+				 	style="width:150px;height:22px"/>
 				</td>
 				<td>
 					<a class="easyui-linkbutton" onclick="submit()" style="width:100%">生成代码</a>
@@ -61,16 +65,8 @@ function submit(){
 			return $(this).form('validate');
 		},
 		success: function(result){
-			var result = eval('('+result+')');
-			if (result.errorMsg){
-				$.messager.show({
-					title: 'Error',
-					msg: result.errorMsg
-				});
-			} else {
-				$('#dlg').dialog('close');	 
-				$('#dg').datagrid('reload'); 
-			}
+			result=JSON.parse(result);
+			alert(result);
 		}
 	});
 }

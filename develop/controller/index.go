@@ -14,10 +14,6 @@ func crud(c *Controller) {
 	c.Tpl = "crud.html"
 	c.Data["title"] = "代码生成"
 	c.Data["name"] = c.FormValue("name")
-	ret, err := model.FindColumns("hj", c.FormValue("name"))
-	if err == nil {
-		c.Data["columns"] = ret
-	}
 }
 func loadColumns(c *Controller) {
 	page, _ := strconv.Atoi(c.FormValue("page"))
@@ -27,8 +23,5 @@ func loadColumns(c *Controller) {
 		c.WriteJson(err)
 		return
 	}
-
-	p := GetPagination(int64(len(ret)), page, rows)
-	p.Ret = ret
-	c.WriteJson(p)
+	c.WriteJson(GetPagination(int64(len(ret)), page, rows, ret))
 }

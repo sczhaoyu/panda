@@ -24,7 +24,7 @@ type Pagination struct {
 }
 
 //分页计算 总数据条数，当前页，显示多少条
-func GetPagination(c int64, currentPage, pageSize int) *Pagination {
+func GetPagination(c int64, currentPage, pageSize int, ret interface{}) *Pagination {
 	count := int(c)
 	var p Pagination
 	p.Count = count //总数据条数
@@ -61,7 +61,7 @@ func GetPagination(c int64, currentPage, pageSize int) *Pagination {
 	///处理开始位置
 
 	p.StartNum = p.CurrentPage*p.ShowNum - p.ShowNum
-
+	p.Ret = ret
 	return &p
 }
 

@@ -8,4 +8,27 @@
 	<script type="text/javascript" src="/public/eui/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="/public/eui/locale/easyui-lang-zh_CN.js"></script>
 </head>
+<script  type="text/javascript">
+	function alert(result){
+		var t="错误消息";
+		var msg="";
+		if(result.success){
+          t="提示"
+          msg=result.ret
+		}else{
+			msg=ret.msg
+		}
+		$.messager.show({
+			title:t,
+			msg:result.ret,
+			showType:'show',
+			style:{
+				left:'',
+				right:0,
+				top:document.body.scrollTop+document.documentElement.scrollTop,
+				bottom:''
+			}
+		});
+	}
+</script>>
 {{end}}

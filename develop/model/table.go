@@ -24,7 +24,7 @@ func FindTable(DBName string, page, limit int) ([]Table, int64, error) {
 		ret = append(ret, tmp)
 	}
 	count, _ := FindTableCount(DBName)
-	return ret, count, noData(len(ret) > 0)
+	return ret, count, NoData(len(ret) > 0)
 }
 
 //查询表名称
@@ -35,7 +35,7 @@ func FindTableCount(DBName string) (int64, error) {
 		return 0, err
 	}
 	if len(rs) == 0 {
-		return 0, noData(len(rs) > 0)
+		return 0, NoData(len(rs) > 0)
 	}
 	count, _ := strconv.ParseInt(string(rs[0]["count"]), 10, 64)
 	return count, nil
