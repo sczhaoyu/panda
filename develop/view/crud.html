@@ -4,6 +4,14 @@
 	    <input type="hidden" name="table" value="{{.name}}" /> 
 		<table>
 			<tr>
+			    <td>
+			    	<select class="easyui-combobox" name="idFiled" style="width:200px;"> 
+			    	    {{range .columns}}
+						<option value="{{.Name}}">{{.Name}}</option> 
+			    	    {{end}}
+						 
+					</select> 
+			    </td>
 				<td>action目录:</td>
 				<td>
 					<input value="controller/" 

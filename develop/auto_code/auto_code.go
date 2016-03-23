@@ -122,10 +122,13 @@ func WriteFile(path, fileName, body string) {
 	defer f.Close()
 }
 func CreateColunm(c Colunm) string {
-	if c.Comment == "" {
-		return fmt.Sprintf("	%s    %s   `json:\"%s\"`", c.GoFiled, c.GoType, c.GoJsonName)
+	if c.IsPriKey {
+		c.GoJsonName = PSK(filert(c.TableName)) + TF(c.GoJsonName)
 	}
-	return fmt.Sprintf("	%s    %s   `json:\"%s\"`    //%s", c.GoFiled, c.GoType, c.GoJsonName, c.Comment)
+	if c.Comment == "" {
+		return fmt.Sprintf("	%s    %s   `json:\"%s\" form:\"%s\"`", c.GoFiled, c.GoType, c.GoJsonName, c.GoJsonName)
+	}
+	return fmt.Sprintf("	%s    %s   `json:\"%s\" form:\"%s\"`    //%s", c.GoFiled, c.GoType, c.GoJsonName, c.GoJsonName, c.Comment)
 }
 func CreateTable(name, zs string, c []Colunm) string {
 	srcName := name

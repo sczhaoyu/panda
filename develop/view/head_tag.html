@@ -13,22 +13,10 @@
 		var t="错误消息";
 		var msg="";
 		if(result.success){
-          t="提示"
-          msg=result.ret
+         $.messager.alert('提示',result.ret);
 		}else{
-			msg=ret.msg
+		 $.messager.alert('错误',result.msg,'error');
 		}
-		$.messager.show({
-			title:t,
-			msg:result.ret,
-			showType:'show',
-			style:{
-				left:'',
-				right:0,
-				top:document.body.scrollTop+document.documentElement.scrollTop,
-				bottom:''
-			}
-		});
 	}
 </script>>
 {{end}}

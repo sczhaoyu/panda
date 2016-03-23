@@ -8,11 +8,12 @@ import (
 )
 
 type PrmAutoCode struct {
-	Pk     string `form:"pk"`     //主键
-	Action string `form:"action"` //控制器代码生成目录
-	View   string `form:"view"`   //模板代码生成目录
-	Model  string `form:"model"`  //数据库文件生成目录
-	Table  string `form:"table"`  //表名
+	Pk      string `form:"pk"`      //主键
+	Action  string `form:"action"`  //控制器代码生成目录
+	View    string `form:"view"`    //模板代码生成目录
+	Model   string `form:"model"`   //数据库文件生成目录
+	Table   string `form:"table"`   //表名
+	IdFiled string `form:"idFiled"` //ID字段名
 }
 
 func autoCode(c *Controller) {
@@ -37,7 +38,8 @@ func autoCode(c *Controller) {
 	auto_code.DBPwd = "root"
 	auto_code.GetTableInfo(p.Table)
 	//生成控制层代码
-	auto_code.CreateController(p.Action, "id", p.Table, p.Model)
+	auto_code.CreateController(p.Action, p.IdFiled, p.Table, p.Model)
 	//生成view代码
+	auto_code.CreateHtml(p.Table, p.View, p.IdFiled)
 	c.Write(ToJson("生成完毕！"))
 }
