@@ -30,7 +30,7 @@ func FindTable(page, limit int) ([]Table, int64, error) {
 
 //查询表名称
 func FindTableCount() (int64, error) {
-	sql := "select table_name,TABLE_COMMENT from information_schema.tables where table_schema=? and table_type='base table' and ;"
+	sql := "select  count(*) as count from information_schema.tables where table_schema=? and table_type='base table' ;"
 	rs, err := DB.Query(sql, config.DB("db").String())
 	if err != nil {
 		return 0, err
@@ -44,7 +44,7 @@ func FindTableCount() (int64, error) {
 }
 func GetTable(name string) (*Table, error) {
 	var ret Table
-	sql := "select count(*) as count from information_schema.tables where table_schema=? and table_type='base table' and table_name=?;"
+	sql := "select * from information_schema.tables where table_schema=? and table_type='base table' and table_name=?;"
 	rs, err := DB.Query(sql, config.DB("db").String(), name)
 	if err != nil {
 		return nil, err
