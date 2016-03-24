@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+
 	. "github.com/sczhaoyu/panda"
 	"github.com/sczhaoyu/panda/develop/auto_code"
 	"path/filepath"
@@ -30,12 +31,7 @@ func autoCode(c *Controller) {
 		return
 	}
 	auto_code.Path = path
-	auto_code.PackageName = "model"
-	auto_code.DB = "hj"
-	auto_code.DBSrc = "DB"
-	auto_code.DBUser = "root"
-	auto_code.DBUrl = "10.0.0.252:3306"
-	auto_code.DBPwd = "root"
+	auto_code.PackageName = filepath.Base(path)
 	auto_code.GetTableInfo(p.Table)
 	//生成控制层代码
 	auto_code.CreateController(p.Action, p.IdFiled, p.Table, p.Model)

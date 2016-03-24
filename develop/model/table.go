@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/sczhaoyu/panda/develop/config"
 	"strconv"
 )
 
@@ -10,10 +11,10 @@ type Table struct {
 }
 
 //查询表名称
-func FindTable(DBName string, page, limit int) ([]Table, int64, error) {
+func FindTable(page, limit int) ([]Table, int64, error) {
 	var ret []Table
 	sql := "select table_name,TABLE_COMMENT from information_schema.tables where table_schema=? and table_type='base table' limit ?,?;"
-	rs, err := DB.Query(sql, DBName, page*limit-limit, limit)
+	rs, err := DB.Query(sql, config.DB("db").String(), page*limit-limit, limit)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -23,14 +24,14 @@ func FindTable(DBName string, page, limit int) ([]Table, int64, error) {
 		tmp.Comment = string(rs[i]["TABLE_COMMENT"])
 		ret = append(ret, tmp)
 	}
-	count, _ := FindTableCount(DBName)
+	count, _ := FindTableCount()
 	return ret, count, NoData(len(ret) > 0)
 }
 
 //查询表名称
-func FindTableCount(DBName string) (int64, error) {
-	sql := "select count(*) as count from information_schema.tables where table_schema=? and table_type='base table';"
-	rs, err := DB.Query(sql, DBName)
+func FindTableCount() (int64, error) {
+	sql := "select table_name,TABLE_COMMENT from information_schema.tables where table_schema=? and table_type='base table' and ;"
+	rs, err := DB.Query(sql, config.DB("db").String())
 	if err != nil {
 		return 0, err
 	}
@@ -40,4 +41,18 @@ func FindTableCount(DBName string) (int64, error) {
 	count, _ := strconv.ParseInt(string(rs[0]["count"]), 10, 64)
 	return count, nil
 
+}
+func GetTable(name string) (*Table, error) {
+	var ret Table
+	sql := "select count(*) as count from information_schema.tables where table_schema=? and table_type='base table' and table_name=?;"
+	rs, err := DB.Query(sql, config.DB("db").String(), name)
+	if err != nil {
+		return nil, err
+	}
+	for i := 0; i < 1; i++ {
+		ret.Name = string(rs[0]["table_name"])
+		ret.Comment = string(rs[0]["TABLE_COMMENT"])
+	}
+
+	return &ret, NoData(ret.Name != "")
 }

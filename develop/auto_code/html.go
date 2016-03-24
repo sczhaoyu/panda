@@ -18,7 +18,7 @@ func CreateHtml(tableName, viewPath, idFiled string) {
 	if err == nil {
 		//加载全部列
 		var m map[string]interface{} = make(map[string]interface{}, 0)
-		cols, err := model.FindColumns("hj", tableName)
+		cols, err := model.FindColumns(tableName)
 		//处理名称
 		for i := 0; i < len(cols); i++ {
 

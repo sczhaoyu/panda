@@ -1,5 +1,9 @@
 package model
 
+import (
+	"github.com/sczhaoyu/panda/develop/config"
+)
+
 type Column struct {
 	TableName string `json:"tableName"` //表名称
 	DataType  string `json:"dataType"`  //数据类型
@@ -9,10 +13,10 @@ type Column struct {
 }
 
 //获取列名称sql
-func FindColumns(DBName, tableName string) ([]Column, error) {
+func FindColumns(tableName string) ([]Column, error) {
 	var ret []Column
 	sql := "select TABLE_NAME,COLUMN_COMMENT,COLUMN_KEY,DATA_TYPE,COLUMN_NAME from information_schema.columns where table_schema=? and table_name=?;"
-	rs, err := DB.Query(sql, DBName, tableName)
+	rs, err := DB.Query(sql, config.DB("db").String(), tableName)
 	if err != nil {
 		return nil, err
 	}

@@ -2,8 +2,10 @@ package model
 
 import (
 	"errors"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
+	"github.com/sczhaoyu/panda/develop/config"
 )
 
 var (
@@ -11,7 +13,8 @@ var (
 )
 
 func init() {
-	DB, _ = xorm.NewEngine("mysql", "root:root@tcp(10.0.0.252:3306)/hj?charset=utf8")
+	url := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", config.DB("name").String(), config.DB("pwd").String(), config.DB("address").String(), config.DB("db").String())
+	DB, _ = xorm.NewEngine(config.DB("type").String(), url)
 	DB.ShowSQL = true
 }
 func NoData(b bool) error {

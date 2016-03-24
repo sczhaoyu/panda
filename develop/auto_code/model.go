@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/sczhaoyu/panda/develop/config"
+	"github.com/sczhaoyu/panda/develop/model"
 	"huijujiayuan.com/util"
 	"io"
 	"os"
@@ -12,16 +14,16 @@ import (
 )
 
 var (
-	TableSufix                       = []string{"t_s_", "hj_"} //忽略表前缀
-	PackageName                      = "model"                 //包名称
-	Path                             = ""                      //存储路径
-	DBSrc                            = "DocDB"                 //数据库变量名称
-	DBUser                           = "root"                  //数据库账号
-	DBUrl                            = "10.0.0.252:3306"       //数据库连接地址
-	DBPwd                            = "root"                  //数据库密码
-	DB                               = "doc"                   //操作数据库
-	Import         map[string]string = make(map[string]string) //需要导入的包
-	IsImportDBCode                   = true                    //是否导入数据源
+	TableSufix                       = config.DB("table_sufix").Strings(",") //忽略表前缀
+	PackageName                      = ""                                    //包名称
+	Path                             = ""                                    //存储路径
+	DBSrc                            = config.DB("db_name").String()         //数据库变量名称
+	DBUser                           = config.DB("name").String()            //数据库账号
+	DBUrl                            = config.DB("address").String()         //数据库连接地址
+	DBPwd                            = config.DB("pwd").String()             //数据库密码
+	DB                               = config.DB("db").String()              //操作数据库
+	Import         map[string]string = make(map[string]string)               //需要导入的包
+	IsImportDBCode                   = true                                  //是否导入数据源
 )
 
 type Colunm struct {
@@ -38,10 +40,10 @@ type Colunm struct {
 }
 
 func filert(name string) string {
-
 	for i := 0; i < len(TableSufix); i++ {
 		name = strings.Replace(name, TableSufix[i], "", -1)
 	}
+
 	return name
 }
 
@@ -59,26 +61,9 @@ func (c *Colunm) GetGoDataType() {
 
 }
 
-//获取表名称sql
-func GetDBTableNameSql(DBName string) string {
-	sql := fmt.Sprintf("select table_name,TABLE_COMMENT from information_schema.tables where table_schema='%s' and table_type='base table';", DBName)
-	return sql
-}
-
-//获取表注释sql
-func GetDBTableZsSql(DBName, tableName string) string {
-	sql := fmt.Sprintf("select TABLE_COMMENT from information_schema.tables where table_schema='%s' and table_type='base table' and table_name='%s';", DBName, tableName)
-	return sql
-}
-
-//获取列名称sql
-func GetDBColunmSql(TableName string) string {
-	sql := fmt.Sprintf("select * from information_schema.columns where table_schema='%s' and table_name='%s';", DB, TableName)
-	return sql
-}
 func FindTable() {
-	ret := Query(GetDBTableNameSql(DB))
-	if ret == nil {
+	ret, _, err := model.FindTable(1, 9999999)
+	if err != nil {
 		fmt.Println("not found table!")
 		return
 	}
@@ -86,22 +71,17 @@ func FindTable() {
 		WriteFile(Path, "db.go", DBCode())
 	}
 	for i := 0; i < len(ret); i++ {
-
 		//获取表名
-
-		GetTableInfo(string(ret[i]["table_name"]))
-
+		GetTableInfo(string(ret[i].Name))
 	}
 
 }
 func GetTableInfo(tableName string) {
 	//查询表的注释
-	ret := Query(GetDBTableZsSql(DB, tableName))
+	ret, err := model.GetTable(tableName)
 	zs := ""
-	if ret != nil {
-		for i := 0; i < len(ret); i++ {
-			zs = string(ret[i]["TABLE_COMMENT"])
-		}
+	if err == nil {
+		zs = ret.Comment
 	}
 	table := CreateTable(tableName, zs, FindColunm(tableName))
 	WriteFile(Path, tableName+".go", table)
@@ -172,27 +152,23 @@ func CrateTableFunc(name, srcName string) string {
 	return fmt.Sprintf(s, name, srcName)
 }
 func FindColunm(TableName string) []Colunm {
-
-	m := Query(GetDBColunmSql(TableName))
-	if m == nil {
+	m, err := model.FindColumns(TableName)
+	if err != nil {
 		fmt.Println("not found column!")
 		return nil
 	}
-
 	TableName = filert(TableName) //过滤前缀
-
 	var ret []Colunm = make([]Colunm, 0, 200)
 	for i := 0; i < len(m); i++ {
 		var tmp Colunm
-		tmp.Type = string(m[i]["DATA_TYPE"])         //数据类型
-		tmp.Name = string(m[i]["COLUMN_NAME"])       //列名
-		tmp.Comment = string(m[i]["COLUMN_COMMENT"]) //列注释
-		tmp.Key = string(m[i]["COLUMN_KEY"])         //主键
-		tmp.TableName = TableName                    //表名
-		tmp.GoStructName = TF(TableName)             //在结构中的名字
-		tmp.GetGoDataType()                          //装配数据类型
+		tmp.Type = m[i].DataType         //数据类型
+		tmp.Name = m[i].Name             //列名
+		tmp.Comment = m[i].Comment       //列注释
+		tmp.Key = m[i].Key               //主键
+		tmp.TableName = m[i].TableName   //表名
+		tmp.GoStructName = TF(TableName) //在结构中的名字
+		tmp.GetGoDataType()              //装配数据类型
 		tmp.GoJsonName = PSK(tmp.Name)
-
 		ret = append(ret, tmp)
 	}
 	return ret
@@ -345,7 +321,6 @@ import (
 )
 
 const (
-	SQL_NUM     = 150 //SQL批处理条数
 	MAX_CLIENT  = 400 //最大链接个数
 	INIT_CLIENT = 10  //初始化链接个数
 )
