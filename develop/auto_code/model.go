@@ -6,7 +6,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/sczhaoyu/panda/develop/config"
 	"github.com/sczhaoyu/panda/develop/model"
-	"huijujiayuan.com/util"
 	"io"
 	"os"
 	"regexp"
@@ -199,7 +198,7 @@ func TF(name string) string {
 	ret := ""
 	for i := 0; i < len(s); i++ {
 
-		ret = ret + strings.ToUpper(util.SubString(s[i], 0, 1)) + util.SubString(s[i], 1, len(s[i]))
+		ret = ret + strings.ToUpper(SubString(s[i], 0, 1)) + SubString(s[i], 1, len(s[i]))
 	}
 	return ret
 }
@@ -212,7 +211,7 @@ func PSK(name string) string {
 		return strings.ToLower(ret)
 	}
 
-	return strings.ToLower(util.SubString(ret, 0, 1)) + util.SubString(ret, 1, len(ret))
+	return strings.ToLower(SubString(ret, 0, 1)) + SubString(ret, 1, len(ret))
 }
 
 //创建函数
@@ -223,7 +222,7 @@ func CreateFunc(name string) string {
 	return err
 	}
 	`
-	one := strings.ToLower(util.SubString(name, 0, 1))
+	one := strings.ToLower(SubString(name, 0, 1))
 	return fmt.Sprintf(fun, one, name, DBSrc, one)
 }
 
@@ -248,7 +247,7 @@ func DeleteFunc(name string, filed, goFiled string) string {
 	_, err := %s.Where("%s=?",%s.%s).Delete(%s{})
 	return err
 	}`
-	one := strings.ToLower(util.SubString(name, 0, 1))
+	one := strings.ToLower(SubString(name, 0, 1))
 	return fmt.Sprintf(fun, one, name, DBSrc, filed, one, goFiled, name)
 }
 
@@ -276,7 +275,7 @@ func UpdateFunc(name, goFiled, dbFiled string) string {
 	return err
 	}
   `
-	one := strings.ToLower(util.SubString(name, 0, 1))
+	one := strings.ToLower(SubString(name, 0, 1))
 	return fmt.Sprintf(fun, one, name, DBSrc, dbFiled, one, goFiled, one)
 }
 func FindFunc(name, dbFiled string) string {
@@ -389,4 +388,24 @@ func Query(sqL string) []map[string]string {
 	}
 	defer db.Close()
 	return ret
+}
+func SubString(str string, begin, length int) (substr string) {
+	// 将字符串的转换成[]rune
+	rs := []rune(str)
+	lth := len(rs)
+
+	// 简单的越界判断
+	if begin < 0 {
+		begin = 0
+	}
+	if begin >= lth {
+		begin = lth
+	}
+	end := begin + length
+	if end > lth {
+		end = lth
+	}
+
+	// 返回子串
+	return string(rs[begin:end])
 }
