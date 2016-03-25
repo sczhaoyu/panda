@@ -30,13 +30,18 @@ func FindTable(name string, page, limit int) ([]Table, int64, error) {
 		tmp.Comment = string(rs[i]["TABLE_COMMENT"])
 		ret = append(ret, tmp)
 	}
-	count, _ := FindTableCount()
+	count, _ := FindTableCount(name)
 	return ret, count, NoData(len(ret) > 0)
 }
 
 //查询表名称
-func FindTableCount() (int64, error) {
-	sql := "select  count(*) as count from information_schema.tables where table_schema=? and table_type='base table' ;"
+func FindTableCount(name string) (int64, error) {
+	sql := "select  count(*) as count from information_schema.tables where table_schema=? %s and table_type='base table' ;"
+	if name != "" {
+		sql = fmt.Sprintf(sql, "and table_name like '%"+name+"%'")
+	} else {
+		sql = fmt.Sprintf(sql, "")
+	}
 	rs, err := DB.Query(sql, config.DB("db").String())
 	if err != nil {
 		return 0, err
