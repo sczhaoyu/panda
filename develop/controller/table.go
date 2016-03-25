@@ -9,7 +9,8 @@ import (
 func tableFind(c *Controller) {
 	page, _ := strconv.Atoi(c.FormValue("page"))
 	rows, _ := strconv.Atoi(c.FormValue("rows"))
-	ret, count, err := model.FindTable(page, rows)
+	name := c.FormValue("name")
+	ret, count, err := model.FindTable(name, page, rows)
 	if err != nil {
 		c.WriteJson(err)
 		return

@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"github.com/sczhaoyu/panda/develop/config"
 	"strconv"
 )
@@ -11,9 +12,14 @@ type Table struct {
 }
 
 //查询表名称
-func FindTable(page, limit int) ([]Table, int64, error) {
+func FindTable(name string, page, limit int) ([]Table, int64, error) {
 	var ret []Table
-	sql := "select table_name,TABLE_COMMENT from information_schema.tables where table_schema=? and table_type='base table' limit ?,?;"
+	sql := "select table_name,TABLE_COMMENT from information_schema.tables where table_schema=? %s and table_type='base table' limit ?,?;"
+	if name != "" {
+		sql = fmt.Sprintf(sql, "and table_name like '%"+name+"%'")
+	} else {
+		sql = fmt.Sprintf(sql, "")
+	}
 	rs, err := DB.Query(sql, config.DB("db").String(), page*limit-limit, limit)
 	if err != nil {
 		return nil, 0, err

@@ -62,7 +62,7 @@ func (c *Colunm) GetGoDataType() {
 }
 
 func FindTable() {
-	ret, _, err := model.FindTable(1, 9999999)
+	ret, _, err := model.FindTable("", 1, 9999999)
 	if err != nil {
 		fmt.Println("not found table!")
 		return
