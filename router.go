@@ -25,7 +25,8 @@ var (
 	//路由器列表
 	routers map[string]*Router = make(map[string]*Router, 0)
 	//静态资源目录列表,表达式
-	staticFolder []string = make([]string, 0, 0)
+	staticFolder []string                                      = make([]string, 0, 0)
+	StaticHandle func(http.ResponseWriter, *http.Request) bool = nil
 )
 
 //添加路由器
@@ -48,10 +49,19 @@ func HandlerRouter(method, url string, f func(*Controller)) {
 
 //静态资源目录检查
 func checkStaticFolder(w http.ResponseWriter, r *http.Request, url string) bool {
+
 	for i := 0; i < len(staticFolder); i++ {
 		if isOk, _ := regexp.MatchString(staticFolder[i], url); isOk {
+			//运行静态文件处理拦截器
+			if StaticHandle != nil {
+				b := StaticHandle(w, r)
+				if !b {
+					return isOk
+				}
+			}
 			http.ServeFile(w, r, strings.TrimLeft(url, "/"))
 			return isOk
+
 		}
 	}
 	return false

@@ -12,31 +12,31 @@ import (
 )
 
 var (
-	pandaTplFuncMap template.FuncMap = make(template.FuncMap)
+	PandaTplFuncMap template.FuncMap = make(template.FuncMap)
 )
 
 func init() {
-	pandaTplFuncMap["dateformat"] = DateFormat
-	pandaTplFuncMap["date"] = Date
-	pandaTplFuncMap["compare"] = Compare
-	pandaTplFuncMap["compare_not"] = CompareNot
-	pandaTplFuncMap["not_nil"] = NotNil
-	pandaTplFuncMap["not_null"] = NotNil
-	pandaTplFuncMap["substr"] = Substr
-	pandaTplFuncMap["html2str"] = Html2str
-	pandaTplFuncMap["str2html"] = Str2html
-	pandaTplFuncMap["htmlquote"] = Htmlquote
-	pandaTplFuncMap["htmlunquote"] = Htmlunquote
-	pandaTplFuncMap["renderform"] = RenderForm
-	pandaTplFuncMap["assets_js"] = AssetsJs
-	pandaTplFuncMap["assets_css"] = AssetsCss
-	pandaTplFuncMap["include"] = Include
-	pandaTplFuncMap["eq"] = eq // ==
-	pandaTplFuncMap["ge"] = ge // >=
-	pandaTplFuncMap["gt"] = gt // >
-	pandaTplFuncMap["le"] = le // <=
-	pandaTplFuncMap["lt"] = lt // <
-	pandaTplFuncMap["ne"] = ne // !=
+	PandaTplFuncMap["dateformat"] = DateFormat
+	PandaTplFuncMap["date"] = Date
+	PandaTplFuncMap["compare"] = Compare
+	PandaTplFuncMap["compare_not"] = CompareNot
+	PandaTplFuncMap["not_nil"] = NotNil
+	PandaTplFuncMap["not_null"] = NotNil
+	PandaTplFuncMap["substr"] = Substr
+	PandaTplFuncMap["html2str"] = Html2str
+	PandaTplFuncMap["str2html"] = Str2html
+	PandaTplFuncMap["htmlquote"] = Htmlquote
+	PandaTplFuncMap["htmlunquote"] = Htmlunquote
+	PandaTplFuncMap["renderform"] = RenderForm
+	PandaTplFuncMap["assets_js"] = AssetsJs
+	PandaTplFuncMap["assets_css"] = AssetsCss
+	PandaTplFuncMap["include"] = Include
+	PandaTplFuncMap["eq"] = eq // ==
+	PandaTplFuncMap["ge"] = ge // >=
+	PandaTplFuncMap["gt"] = gt // >
+	PandaTplFuncMap["le"] = le // <=
+	PandaTplFuncMap["lt"] = lt // <
+	PandaTplFuncMap["ne"] = ne // !=
 }
 func Include(fileName string) string {
 	bytes, err := ioutil.ReadFile(fileName) //读文件

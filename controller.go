@@ -92,7 +92,7 @@ func (c *Controller) render() {
 	c.Tpl = ViewPath + c.Tpl
 	ret := []string{c.Tpl}
 	ret = append(ret, templates[c.Tpl]...)
-	t, err := template.New(filepath.Base(c.Tpl)).Funcs(pandaTplFuncMap).ParseFiles(ret...)
+	t, err := template.New(filepath.Base(c.Tpl)).Funcs(PandaTplFuncMap).ParseFiles(ret...)
 	if err != nil {
 		c.Write([]byte(err.Error()))
 		return
