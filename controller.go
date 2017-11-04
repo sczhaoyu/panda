@@ -28,7 +28,7 @@ func newController(r *http.Request, w http.ResponseWriter) *Controller {
 	c.Request = r
 	c.ResponseWriter = w
 	c.Data = make(map[string]interface{}, 0)
-	c.Request.ParseForm()
+	//c.Request.ParseForm()
 	//加入session管理器
 	if SessionSwitch && panda.SessionManager != nil {
 		c.SessionManager = panda.SessionManager
