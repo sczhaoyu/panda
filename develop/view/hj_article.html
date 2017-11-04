@@ -1,0 +1,190 @@
+{{template "header" .}}
+<div  data-options="region:'center',title:'数据表信息'">
+	<table id="dg" style="width:auto;height:auto;"></table>
+	<!--保存窗口-->
+	<div id="win" class="easyui-window" closed="true" 
+	data-options="modal:true,
+				  resizable:false,
+				  maximizable:false,
+				  minimizable:false,
+				  collapsible:false"  
+	style="width:480px;height:260px;">
+		<form id="saveOrUpdate" method="post" style="padding:10px;">
+			     <p>ID: <input type="text" name="articleId" /></p>
+			     <p>标题: <input type="text" name="title" /></p>
+			     <p>封面图: <input type="text" name="img" /></p>
+			     <p>作者: <input type="text" name="author" /></p>
+			     <p>发布时间: <input type="text" name="ctime" /></p>
+			     <p>更新时间: <input type="text" name="utime" /></p>
+			     <p>文章摘要: <input type="text" name="remark" /></p>
+			     <p>文章内容: <input type="text" name="body" /></p>
+			     <p>显示样式(0纯标题，1标题加描述文本，2纯图片）: <input type="text" name="style" /></p>
+			     <p>阅读数: <input type="text" name="readCount" /></p>
+			     <p>分享数: <input type="text" name="shareCount" /></p>
+			     <p>评论数: <input type="text" name="commentCount" /></p>
+			     <p>是否投票（0没有，大于1有投票）: <input type="text" name="voteId" /></p>
+			     <p>所属栏目ID: <input type="text" name="columnId" /></p>
+			     <p>删除状态（0正常，1删除）: <input type="text" name="isDel" /></p>
+			     <p>小区ID: <input type="text" name="communityId" /></p>
+			     <p>点赞用户ID: <input type="text" name="goodUsers" /></p>
+			     <p>活动报名项目ID: <input type="text" name="enrollId" /></p>
+			     <p>是否报名 0 否 1 是: <input type="text" name="isEnroll" /></p>
+			     <p>链接: <input type="text" name="link" /></p>
+			     <p>内容类型 0 富文本 1 链接: <input type="text" name="bodyType" /></p>
+			     
+			<div style="padding:5px;text-align:center;">
+				<a id="addOrUpdate" 
+				   class="easyui-linkbutton" 
+				   icon="icon-ok"
+				   onclick="submitForm()"></a>
+			</div>
+		</form>
+	</div>
+	<!--保存窗口 END-->
+</div>
+<script type="text/javascript">
+	$(function(){
+		var pager =$('#dg').datagrid({
+			border:false,
+			fitColumns:true,
+			url:"/article/list",
+			rownumbers:true,
+			singleSelect:true,
+			pagination:true,
+			pageSize:15,
+			pageList: [15,30,50,100],
+			columns:[[
+			    
+			       {field:'articleId',title:' ID',width:80},
+			       {field:'title',title:' 标题',width:80},
+			       {field:'img',title:' 封面图',width:80},
+			       {field:'author',title:' 作者',width:80},
+			       {field:'ctime',title:' 发布时间',width:80},
+			       {field:'utime',title:' 更新时间',width:80},
+			       {field:'remark',title:' 文章摘要',width:80},
+			       {field:'body',title:' 文章内容',width:80},
+			       {field:'style',title:' 显示样式(0纯标题，1标题加描述文本，2纯图片）',width:80},
+			       {field:'readCount',title:' 阅读数',width:80},
+			       {field:'shareCount',title:' 分享数',width:80},
+			       {field:'commentCount',title:' 评论数',width:80},
+			       {field:'voteId',title:' 是否投票（0没有，大于1有投票）',width:80},
+			       {field:'columnId',title:' 所属栏目ID',width:80},
+			       {field:'isDel',title:' 删除状态（0正常，1删除）',width:80},
+			       {field:'communityId',title:' 小区ID',width:80},
+			       {field:'goodUsers',title:' 点赞用户ID',width:80},
+			       {field:'enrollId',title:' 活动报名项目ID',width:80},
+			       {field:'isEnroll',title:' 是否报名 0 否 1 是',width:80},
+			       {field:'link',title:' 链接',width:80},
+			       {field:'bodyType',title:' 内容类型 0 富文本 1 链接',width:80},
+			       {field:'cz',title:'操作',width:80,
+					formatter:function(value,rec){
+					   var btn = '<a  onclick="saveOrUpdate('+rec.articleId+')"  style="padding:0px;" class="editcls"></a>';
+					   btn+='<a  onclick="deleteByid('+rec.articleId+')" style="padding:0px;" class="deletecls"></a>';
+					return btn;
+				}}
+			]],
+			onLoadSuccess:function(data){
+				$('.editcls').linkbutton({text:'修改',plain:true,iconCls:'icon-edit'});
+				$('.deletecls').linkbutton({text:'删除',plain:true,iconCls:'icon-remove'});
+			}
+		}).datagrid('getPager');
+		pager.pagination({
+			buttons:[{
+				iconCls:'icon-add',
+				handler:function(){
+				  saveOrUpdate(""); 
+				}
+			}]
+		})
+	});
+
+function saveOrUpdate(id){
+    if (id!="") {
+    	$('#win').window({title:"修改",iconCls:'icon-edit'});
+    	$('#addOrUpdate').linkbutton({text:"确认修改"});
+    	$.post("/article/byid",{"articleId":id},function(d){
+			if (d.success) {
+				 
+				 $("input[name='articleId']").val(d.ret.articleId);
+				 $("input[name='title']").val(d.ret.title);
+				 $("input[name='img']").val(d.ret.img);
+				 $("input[name='author']").val(d.ret.author);
+				 $("input[name='ctime']").val(d.ret.ctime);
+				 $("input[name='utime']").val(d.ret.utime);
+				 $("input[name='remark']").val(d.ret.remark);
+				 $("input[name='body']").val(d.ret.body);
+				 $("input[name='style']").val(d.ret.style);
+				 $("input[name='readCount']").val(d.ret.readCount);
+				 $("input[name='shareCount']").val(d.ret.shareCount);
+				 $("input[name='commentCount']").val(d.ret.commentCount);
+				 $("input[name='voteId']").val(d.ret.voteId);
+				 $("input[name='columnId']").val(d.ret.columnId);
+				 $("input[name='isDel']").val(d.ret.isDel);
+				 $("input[name='communityId']").val(d.ret.communityId);
+				 $("input[name='goodUsers']").val(d.ret.goodUsers);
+				 $("input[name='enrollId']").val(d.ret.enrollId);
+				 $("input[name='isEnroll']").val(d.ret.isEnroll);
+				 $("input[name='link']").val(d.ret.link);
+				 $("input[name='bodyType']").val(d.ret.bodyType);
+				$('#win').window('open');
+			}
+		},"json");
+    }else{
+    	$('#win').window({title:"新建",iconCls:'icon-save'});
+    	$('#addOrUpdate').linkbutton({text:"保存"});
+    	 
+				 $("input[name='articleId']").val("");
+				 $("input[name='title']").val("");
+				 $("input[name='img']").val("");
+				 $("input[name='author']").val("");
+				 $("input[name='ctime']").val("");
+				 $("input[name='utime']").val("");
+				 $("input[name='remark']").val("");
+				 $("input[name='body']").val("");
+				 $("input[name='style']").val("");
+				 $("input[name='readCount']").val("");
+				 $("input[name='shareCount']").val("");
+				 $("input[name='commentCount']").val("");
+				 $("input[name='voteId']").val("");
+				 $("input[name='columnId']").val("");
+				 $("input[name='isDel']").val("");
+				 $("input[name='communityId']").val("");
+				 $("input[name='goodUsers']").val("");
+				 $("input[name='enrollId']").val("");
+				 $("input[name='isEnroll']").val("");
+				 $("input[name='link']").val("");
+				 $("input[name='bodyType']").val("");
+				$('#win').window('open');
+    	
+    }
+	
+}
+//删除该数据
+function deleteByid(id){
+$.post("/article/delete",{"articleId":id},function(d){
+//调用表单刷新
+$('#dg').datagrid();
+alert(d); 
+},"json");
+  
+}
+function submitForm(){
+  var url="/article/update";
+  if ($("input[name='articleId']").val()=="") {
+      url="/article/save";
+  }
+  $('#saveOrUpdate').form('submit', {
+	    url:url,
+	    onSubmit: function(){
+	         $.messager.progress({
+                msg:'处理中...'
+            });
+	    },
+	    success:function(data){
+	    	  $.messager.progress('close');
+	    	  $('#dg').datagrid();
+	          alert(JSON.parse(data));
+	    }
+	});
+}
+</script>

@@ -104,6 +104,21 @@ func (c *Controller) render() {
 	}
 }
 
+//渲染模板
+func (c *Controller) Render(tpl string) {
+	t, err := template.New("template").Funcs(PandaTplFuncMap).Parse(tpl)
+	if err != nil {
+		c.Write([]byte(err.Error()))
+		return
+	}
+	c.ResponseWriter.Header().Add("content-type", "text/html;charset=utf-8")
+
+	err = t.Execute(c.ResponseWriter, c.Data)
+	if err != nil {
+		ERROR.Println(err)
+	}
+}
+
 //将参数转化为一个结构
 func (c *Controller) ParseForm(obj interface{}) error {
 	form := c.Request.Form
