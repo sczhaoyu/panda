@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
 	textTpl "text/template"
@@ -50,6 +51,10 @@ func (c *Controller) GetSession(key string) interface{} {
 		return nil
 	}
 	return sess.Get(key)
+}
+func (c *Controller) RequestURL() string {
+	reg := regexp.MustCompile(`\?.*`)
+	return reg.ReplaceAllString(c.Request.RequestURI, "")
 }
 
 //设置SESSION
