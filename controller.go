@@ -10,6 +10,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	textTpl "text/template"
 	"time"
 )
 
@@ -34,6 +35,11 @@ func newController(r *http.Request, w http.ResponseWriter) *Controller {
 		c.SessionManager = panda.SessionManager
 	}
 	return &c
+}
+
+//创建控制器
+func CreateController(r *http.Request, w http.ResponseWriter) *Controller {
+	return newController(r, w)
 }
 
 //获取Session
@@ -106,12 +112,13 @@ func (c *Controller) render() {
 
 //渲染模板
 func (c *Controller) Render(tpl string) {
-	t, err := template.New("template").Funcs(PandaTplFuncMap).Parse(tpl)
+
+	t, err := textTpl.New("tmp").Funcs(PandaTextTplFuncMap).Parse(tpl)
+
 	if err != nil {
 		c.Write([]byte(err.Error()))
 		return
 	}
-	c.ResponseWriter.Header().Add("content-type", "text/html;charset=utf-8")
 
 	err = t.Execute(c.ResponseWriter, c.Data)
 	if err != nil {

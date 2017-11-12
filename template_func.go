@@ -8,11 +8,13 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
+	textTpl "text/template"
 	"time"
 )
 
 var (
-	PandaTplFuncMap template.FuncMap = make(template.FuncMap)
+	PandaTplFuncMap     template.FuncMap = make(template.FuncMap)
+	PandaTextTplFuncMap textTpl.FuncMap  = make(textTpl.FuncMap)
 )
 
 func init() {
@@ -37,6 +39,10 @@ func init() {
 	PandaTplFuncMap["le"] = le // <=
 	PandaTplFuncMap["lt"] = lt // <
 	PandaTplFuncMap["ne"] = ne // !=
+	for k, _ := range PandaTplFuncMap {
+		PandaTextTplFuncMap[k] = PandaTplFuncMap[k]
+	}
+
 }
 func Include(fileName string) string {
 	bytes, err := ioutil.ReadFile(fileName) //读文件
