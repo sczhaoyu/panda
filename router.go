@@ -27,6 +27,7 @@ var (
 	//静态资源目录列表,表达式
 	staticFolder []string                                      = make([]string, 0, 0)
 	StaticHandle func(http.ResponseWriter, *http.Request) bool = nil
+	NotHandle    func(*Controller)                             = nil //默认处理器
 )
 
 //添加路由器
@@ -82,11 +83,11 @@ func handle(w http.ResponseWriter, r *http.Request) {
 	val, ok := routers[url]
 
 	if !ok {
-		notFound(w)
+		notFound(r, w)
 		return
 	}
 	if val.Method != "" && strings.ToUpper(r.Method) != val.Method {
-		notFound(w)
+		notFound(r, w)
 		return
 	}
 
@@ -105,8 +106,14 @@ func handle(w http.ResponseWriter, r *http.Request) {
 func RouterFilter(c *Controller) {
 
 }
-func notFound(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.WriteHeader(http.StatusNotFound)
-	w.Write([]byte("Not Fount 404!"))
+func notFound(r *http.Request, w http.ResponseWriter) {
+	if NotHandle != nil {
+		NotHandle(newController(r, w))
+	} else {
+
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Not Fount 404!"))
+	}
+
 }

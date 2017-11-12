@@ -79,7 +79,7 @@ func (c *Controller) DestroySession() {
 	c.SessionManager.SessionDestroy(c.ResponseWriter, c.Request)
 }
 func (c *Controller) NotFound() {
-	notFound(c.ResponseWriter)
+	notFound(c.Request, c.ResponseWriter)
 }
 func (c *Controller) Write(b []byte) {
 	c.ResponseWriter.Header().Add("content-type", "text/html;charset=utf-8")
